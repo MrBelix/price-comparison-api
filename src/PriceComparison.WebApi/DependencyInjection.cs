@@ -1,6 +1,7 @@
 using PriceComparison.Application;
 using PriceComparison.Infrastructure;
 using PriceComparison.Infrastructure.EntityFramework;
+using PriceComparison.Infrastructure.Identity;
 
 namespace PriceComparison.WebApi;
 

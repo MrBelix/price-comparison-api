@@ -14,7 +14,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder
             .Property(e => e.Id)
-            .HasConversion<StrongGuidIdConverter<ProductId>>();
+            .HasConversion<StrongGuidIdConverter<ProductId>>()
+            .ValueGeneratedOnAdd();
 
         builder
             .Property(e => e.Slug)
@@ -26,7 +27,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                 mb.ToTable("ProductPrices");
 
                 mb.Property(e => e.Id)
-                    .HasConversion<StrongGuidIdConverter<ProductPriceId>>();
+                    .HasConversion<StrongGuidIdConverter<ProductPriceId>>()
+                    .ValueGeneratedOnAdd();
 
                 mb.Property(e => e.MerchantId)
                     .HasConversion<StrongGuidIdConverter<MerchantId>>();

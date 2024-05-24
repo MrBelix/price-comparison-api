@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  api:
+    image: price-comparison.web-api
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: src/PriceComparison.WebApi/Dockerfile
+    ports:
+      - "88:80"
+      - "8080:8080"
+      - "443:443"
+    environment:
+      DATABASE__HOST: database
+      DATABASE__NAME: $DATABASE_NAME
+      DATABASE__USER: $DATABASE_USER
+      DATABASE__PASSWORD: $DATABASE_PASSWORD
+      DATABASE__PORT: $DATABASE_PORT
+
+  database:
+    image: postgres
+    ports:
+      - ${DATABASE_PORT}:5432
+    environment:
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_USER: $DATABASE_USER
+      POSTGRES_DB: $DATABASE_NAME
