@@ -1,5 +1,4 @@
-using PriceComparison.Infrastructure.Identity;
-using PriceComparison.WebApi;
+using PriceComparison.WebApi.Endpoins;
 using PriceComparison.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,13 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
     .AddEnvironmentVariables();
 
+// Register services
 builder.Services
-    .AddPriceComparisonServices(builder.Configuration);
+    .AddPriceComparisonServices(builder.Configuration)
+    .AddSwagger();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -28,6 +25,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapIdentityApi<ApplicationUser>();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.AddUserEndpoints();
 
 app.Run();

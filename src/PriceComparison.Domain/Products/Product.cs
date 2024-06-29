@@ -6,7 +6,7 @@ namespace PriceComparison.Domain.Products;
 
 public class Product : Entity<ProductId>
 {
-    private readonly List<ProductPrice> _prices = new();
+    private readonly List<ProductPrice> _prices = [];
 
     [UsedImplicitly]
     public Slug Slug { get; private set; }
@@ -30,7 +30,7 @@ public class Product : Entity<ProductId>
     }
 
     private Product()
-        : base(null!)
+        : base(ProductId.Empty)
     {
 
     }

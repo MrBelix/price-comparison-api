@@ -1,24 +1,36 @@
-using System.Collections.Immutable;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 
 namespace PriceComparison.Application.Common.Behaviours;
 
-public sealed class ValidationBehavior<TRequest, TResponse>(
-    IValidator<TRequest> validator) : IPipelineBehavior<TRequest, TResponse>
+public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : IBaseRequest
 {
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
+
+    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    {
+        _validators = validators;
+    }
+
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        var errors = new List<ValidationFailure>();
 
-        if (!validationResult.IsValid)
+        foreach (var validator in _validators)
         {
-            throw new ValidationException(validationResult.Errors);
+            var validationResult =
+                await validator.ValidateAsync(new ValidationContext<TRequest>(request), cancellationToken);
+
+            if (!validationResult.IsValid)
+                errors.AddRange(validationResult.Errors);
         }
 
-        var response = await next();
+        if (errors.Count != 0)
+            throw new ValidationException(errors);
 
-        return response;
+
+        return await next();
     }
 }

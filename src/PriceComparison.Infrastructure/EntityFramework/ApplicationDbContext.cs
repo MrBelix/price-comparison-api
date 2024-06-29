@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PriceComparison.Domain.Products;
-using PriceComparison.Domain.Users;
-using PriceComparison.Infrastructure.Identity;
 
 namespace PriceComparison.Infrastructure.EntityFramework;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, UserId>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public required DbSet<Product> Products { get; init; }
 
