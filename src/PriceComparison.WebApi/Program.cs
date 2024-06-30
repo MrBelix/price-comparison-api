@@ -3,6 +3,17 @@ using PriceComparison.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddCors(op =>
+{
+    op.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Add Environment Variables
 builder.Configuration
     .AddEnvironmentVariables();
@@ -24,6 +35,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
