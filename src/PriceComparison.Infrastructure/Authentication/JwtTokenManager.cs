@@ -22,7 +22,7 @@ public class JwtTokenManager(
         return new AccessToken(
             BuildAccessToken(user),
             BuildRefreshToken(user),
-            DateTime.UtcNow.AddSeconds(_jwtOptions.AccessTokenExpiration));
+            DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpiration));
     }
 
     public async Task<AccessToken?> RefreshAccessToken(string refreshToken)
