@@ -1,3 +1,4 @@
+using FluentValidation;
 using PriceComparison.Application.Authentication.Interfaces;
 using PriceComparison.Application.Common.Interfaces;
 using PriceComparison.Application.Users.Interfaces;
@@ -17,7 +18,7 @@ public class LoginCommandHandler(
 
         if (user is null || !passwordHasher.ValidatePassword(user.Password, request.Password))
         {
-            throw new ArgumentException("Invalid credentials");
+            throw new ValidationException("Invalid credentials");
         }
 
         var token = tokenManager.CreateAccessToken(user);

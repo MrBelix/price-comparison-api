@@ -1,18 +1,20 @@
 using PriceComparison.WebApi.Endpoins;
+using PriceComparison.WebApi.ExceptionHandlers;
 using PriceComparison.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddCors(op =>
+builder.Services.AddCors(options =>
 {
-    op.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin()
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
+            .AllowAnyHeader());
 });
+
+builder.Services
+    .AddExceptionHandler<ValidationExceptionHandler>()
+    .AddProblemDetails();
 
 // Add Environment Variables
 builder.Configuration
@@ -23,9 +25,9 @@ builder.Services
     .AddPriceComparisonServices(builder.Configuration)
     .AddSwagger();
 
-
 var app = builder.Build();
 
+app.UseExceptionHandler();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

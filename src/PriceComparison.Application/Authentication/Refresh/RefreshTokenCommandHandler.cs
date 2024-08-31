@@ -1,3 +1,4 @@
+using FluentValidation;
 using PriceComparison.Application.Authentication.Interfaces;
 using PriceComparison.Application.Common.Interfaces;
 using PriceComparison.Contracts.Authentication;
@@ -11,7 +12,10 @@ public class RefreshTokenCommandHandler(ITokenManager tokenManager)
     {
         var token = await tokenManager.RefreshAccessToken(request.RefreshToken);
 
-        ArgumentNullException.ThrowIfNull(token, "Invalid refresh token");
+        if (token is null)
+        {
+            throw new ValidationException("Invalid refresh token");
+        }
 
         return new AccessTokenResponse(
             token.Access,
